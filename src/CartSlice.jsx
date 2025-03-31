@@ -7,13 +7,27 @@ export const CartSlice = createSlice({
   },
   reducers: {
     addItem: (state, action) => {
-      state.items.push(action.payload); // Agrega el artículo al carrito
-    },
+        const { name, image, cost } = action.payload;
+        const existingItem = state.items.find(item => item.name === name);
+      
+        if (existingItem) {
+          // Si el artículo ya está en el carrito, incrementamos la cantidad
+          existingItem.quantity++;
+        } else {
+          // Si no está en el carrito, lo agregamos con una cantidad de 1
+          state.items.push({ name, image, cost, quantity: 1 });
+        }
+      },
+      
     removeItem: (state, action) => {
-      // Lógica para eliminar un artículo (si la vas a implementar)
+        state.items = state.items.filter(item => item.name !== action.payload);
     },
     updateQuantity: (state, action) => {
-      // Lógica para actualizar cantidad (si la vas a implementar)
+        const { name, quantity } = action.payload;
+        const itemToUpdate = state.items.find(item => item.name === name);
+        if (itemToUpdate) {
+          itemToUpdate.quantity = quantity;
+        }
     },
   },
 });
